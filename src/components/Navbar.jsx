@@ -12,6 +12,9 @@ export default function Navbar() {
       <Link to="/sales" className="hover:underline">
         Sales
       </Link>
+      <Link to="/contact" className="hover:underline">
+        Contact
+      </Link>
     </nav>
   );
 }
