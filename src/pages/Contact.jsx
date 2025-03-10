@@ -35,15 +35,6 @@ const Contact = () => {
 
   return (
     <div>
-      <header>
-        <h1>Contact GT Coaching</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/transformations">Transformations</Link>
-          <Link to="/sales">Plans</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
-      </header>
       
       <section id="contact-form-section">
         <h2>Get in Touch</h2>
@@ -76,9 +67,6 @@ const Contact = () => {
         <div id="contact-response">{formResponse}</div>
       </section>
       
-      <footer>
-        <p>&copy; 2025 GT Coaching</p>
-      </footer>
     </div>
   );
 };

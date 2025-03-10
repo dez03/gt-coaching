@@ -63,16 +63,24 @@ const PaymentForm = ({ productId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <label className="block text-gray-700 font-bold mb-2">Email Address</label>
       <input 
         type="email" 
         placeholder="Your Email" 
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required 
+        className="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <CardElement />
-      <button type="submit" disabled={!stripe || loading}>
+      <div className="p-3 border border-gray-300 rounded mb-4">
+        <CardElement />
+      </div>
+      <button 
+        type="submit" 
+        disabled={!stripe || loading} 
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+      >
         {loading ? 'Processing...' : 'Pay'}
       </button>
     </form>
@@ -89,42 +97,33 @@ const Sales = () => {
   ];
 
   return (
-    <div>
-      <header>
-        <h1>GT Coaching - Plans</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/transformations">Transformations</Link>
-          <Link to="/sales">Plans</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
-      </header>
-      
-      <section id="plans">
-        <h2>Our Plans</h2>
-        <div className="plans-list">
+    <div className="min-h-screen bg-gray-100 py-10">
+      <div className="max-w-4xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8">Our Plans</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map(plan => (
-            <div key={plan.id} className="plan">
-              <h3>{plan.name}</h3>
-              <p>Price: {plan.price}</p>
-              <button onClick={() => setSelectedProductId(plan.id)}>Buy Now</button>
+            <div key={plan.id} className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
+              <p className="text-gray-700 mb-4">Price: {plan.price}</p>
+              <button 
+                onClick={() => setSelectedProductId(plan.id)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Buy Now
+              </button>
             </div>
           ))}
         </div>
-      </section>
-      
-      {selectedProductId && (
-        <div id="payment-section">
-          <h2>Complete Your Payment</h2>
-          <Elements stripe={stripePromise}>
-            <PaymentForm productId={selectedProductId} />
-          </Elements>
-        </div>
-      )}
-      
-      <footer>
-        <p>&copy; 2025 GT Coaching</p>
-      </footer>
+
+        {selectedProductId && (
+          <div id="payment-section" className="mt-10">
+            <h2 className="text-2xl font-bold text-center mb-6">Complete Your Payment</h2>
+            <Elements stripe={stripePromise}>
+              <PaymentForm productId={selectedProductId} />
+            </Elements>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
