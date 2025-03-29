@@ -30,6 +30,44 @@ const products = new Map([
   }],
 ]);
 
+const basicAuth = (req, res, next) => {
+  const auth = req.headers.authorization;
+
+  if (!auth) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Admin Area"');
+    return res.status(401).send("Authentication required.");
+  }
+
+  const [scheme, encoded] = auth.split(" ");
+  const [user, pass] = Buffer.from(encoded, "base64").toString().split(":");
+
+  if (user === process.env.ADMIN_USER && pass === process.env.ADMIN_PASS) {
+    return next();
+  }
+
+  res.setHeader("WWW-Authenticate", 'Basic realm="Admin Area"');
+  res.status(401).send("Access denied.");
+};
+
+
+app.get("/admin", basicAuth, (req, res) => {
+  const db = require("./db");
+  // For a simple view, select distinct emails and count total purchases
+  const emails = db.prepare("SELECT DISTINCT email FROM purchases").all();
+  const totalPurchases = db.prepare("SELECT COUNT(*) as count FROM purchases").get().count;
+
+  // Optionally, you could get more details like product_id and timestamp if needed.
+  const emailList = emails.map(r => r.email).join("<br>");
+
+  res.send(`
+    <h1>Admin Page</h1>
+    <p>Total Purchases: ${totalPurchases}</p>
+    <p>Purchased Emails:</p>
+    <p>${emailList}</p>
+  `);
+});
+
+
 /**
  * POST /create-payment-intent
  * Expects: { productId: number }

@@ -9,10 +9,10 @@ import Navbar from "./components/Navbar";
 
 export default function App() {
   return (
-    <div>
+    <div classname="bg-red-600">
       <Navbar />
 
-      <main className="p-4">
+      <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/transformations" element={<TransformationPage />} />
