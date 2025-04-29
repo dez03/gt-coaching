@@ -87,7 +87,7 @@ const PaymentForm = ({ productId }) => {
   );
 };
 
-const Sales = () => {
+const Shop = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const plans = [
@@ -105,15 +105,24 @@ const Sales = () => {
             <div key={plan.id} className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
               <p className="text-gray-700 mb-4">Price: {plan.price}</p>
+
+
+              <form action="/create-checkout-session" method="POST">
               <button 
                 onClick={() => setSelectedProductId(plan.id)}
                 className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                type='submit'
               >
                 Buy Now
               </button>
+              </form>
+
+              
             </div>
           ))}
         </div>
+
+        
 
         {selectedProductId && (
           <div id="payment-section" className="mt-10">
@@ -128,4 +137,4 @@ const Sales = () => {
   );
 };
 
-export default Sales;
+export default Shop;

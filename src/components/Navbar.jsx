@@ -21,10 +21,10 @@ export default function Navbar() {
         <Link to="/" className="hover:text-gray-300">
           Services
         </Link>
-        <Link to="/transformations" className="hover:text-gray-300">
-          About
+        <Link to="/shop" className="hover:text-gray-300">
+          Shop
         </Link>
-        <Link to="/sales" className="hover:text-gray-300">
+        <Link to="/transformations" className="hover:text-gray-300">
           Transformations
         </Link>
         <Link to="/contact" className="hover:text-gray-300">
@@ -77,14 +77,14 @@ export default function Navbar() {
             Services
           </Link>
           <Link
-            to="/transformations"
+            to="/shop"
             className="hover:text-gray-300"
             onClick={() => setIsOpen(false)}
           >
-            About
+            Shop
           </Link>
           <Link
-            to="/sales"
+            to="/transformations"
             className="hover:text-gray-300"
             onClick={() => setIsOpen(false)}
           >
