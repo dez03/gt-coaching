@@ -342,11 +342,11 @@ function Home() {
         </section>
 
         {/* Calorie Calculator Section */}
-        <section id="calorie-calculator" className="py-16 px-6 bg-gray-800 text-center w-full">
+        {/* <section id="calorie-calculator" className="py-16 px-6 bg-gray-800 text-center w-full">
           <h2 className="text-3xl font-semibold mb-6">Calorie Calculator</h2>
           <p className="text-lg mb-4">Calculate your daily caloric needs!</p>
           <CalorieCounter />
-        </section>
+        </section> */}
       </main>
     </div>
   );

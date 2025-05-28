@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import createCheckoutSession from '../utils/api';
 
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe('YOUR_PUBLISHABLE_KEY');
@@ -19,7 +20,8 @@ const PaymentForm = ({ productId }) => {
 
     try {
       // Create Payment Intent on your server
-      const res = await fetch('/create-payment-intent', {
+      const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/create-payment-intent`, {
+        
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId: Number(productId) }),
@@ -39,7 +41,7 @@ const PaymentForm = ({ productId }) => {
         alert(result.error.message);
       } else if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
         // Inform your backend that payment was successful
-        const successRes = await fetch('/payment-success', {
+        const successRes = await fetch(`${process.env.REACT_APP_SERVER_URL}/payment-success`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -48,6 +50,7 @@ const PaymentForm = ({ productId }) => {
             productId: Number(productId),
           }),
         });
+        
         const successData = await successRes.json();
         if (successRes.ok) {
           alert("Payment successful! Check your email for the download link.");
@@ -74,8 +77,25 @@ const PaymentForm = ({ productId }) => {
         className="w-full p-3 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <div className="p-3 border border-gray-300 rounded mb-4">
-        <CardElement />
-      </div>
+        <CardElement
+            options={{
+              hidePostalCode: true,
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#32325d',
+                  '::placeholder': {
+                    color: '#a0aec0',
+                  },
+                },
+                invalid: {
+                  color: '#fa755a',
+                  iconColor: '#fa755a',
+                },
+              },
+            }}
+          />
+     </div>
       <button 
         type="submit" 
         disabled={!stripe || loading} 
@@ -90,42 +110,50 @@ const PaymentForm = ({ productId }) => {
 const Shop = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-  const plans = [
-    { id: 1, name: '12-Week Plan', price: '$10.00' },
-    { id: 2, name: 'Beginner Plan', price: '$20.00' },
-    { id: 3, name: 'Advanced Plan', price: '$30.00' },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">Our Plans</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map(plan => (
-            <div key={plan.id} className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
-              <p className="text-gray-700 mb-4">Price: {plan.price}</p>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Power Building</h3>
+            <p className="text-gray-700 mb-4">Price: $10.00</p>
+            <button 
+              onClick={() => createCheckoutSession('powerbuilding')}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Buy Now
+            </button>
+          </div>
 
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Body Building</h3>
+            <p className="text-gray-700 mb-4">Price: $20.00</p>
+            <button 
+              onClick={() => createCheckoutSession('bodybuilding')}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Buy Now
+            </button>
+          </div>
 
-              <form action="/create-checkout-session" method="POST">
-              <button 
-                onClick={() => setSelectedProductId(plan.id)}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                type='submit'
-              >
-                Buy Now
-              </button>
-              </form>
-
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-4">Power Lifting</h3>
+            <p className="text-gray-700 mb-4">Price: $30.00</p>
+            <button 
+              onClick={() => createCheckoutSession('powerlifting')}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            >
+              Buy Now
+            </button>
+          </div>
               
-            </div>
-          ))}
-        </div>
-
-        
+        </div>        
 
         {selectedProductId && (
-          <div id="payment-section" className="mt-10">
+          <div id="payment-section" className="mt-10 bg-red-600">
             <h2 className="text-2xl font-bold text-center mb-6">Complete Your Payment</h2>
             <Elements stripe={stripePromise}>
               <PaymentForm productId={selectedProductId} />
